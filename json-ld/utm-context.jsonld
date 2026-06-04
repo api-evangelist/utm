@@ -1,0 +1,37 @@
+{
+  "@context": {
+    "@vocab": "https://schema.org/",
+    "utm": "https://www.utm.my/ns#",
+    "name": "name",
+    "url": "url",
+    "description": "description",
+    "alternateName": "alternateName",
+    "foundingDate": "foundingDate",
+    "address": "address",
+    "sameAs": "sameAs",
+    "InstitutionalRepository": "utm:InstitutionalRepository",
+    "oaiEndpoint": {
+      "@id": "utm:oaiEndpoint",
+      "@type": "@id"
+    },
+    "metadataFormat": "utm:metadataFormat",
+    "protocol": "utm:protocol"
+  },
+  "@type": "CollegeOrUniversity",
+  "name": "Universiti Teknologi Malaysia",
+  "alternateName": "UTM",
+  "url": "https://www.utm.my/",
+  "description": "Universiti Teknologi Malaysia (UTM) is a public research university in Johor Bahru and Kuala Lumpur, Malaysia.",
+  "sameAs": [
+    "https://www.linkedin.com/school/universiti-teknologi-malaysia/",
+    "https://library.utm.my/"
+  ],
+  "utm:repository": {
+    "@type": "InstitutionalRepository",
+    "name": "UTM Institutional Repository (UTM-IR)",
+    "url": "http://eprints.utm.my/",
+    "oaiEndpoint": "http://eprints.utm.my/cgi/oai2",
+    "protocol": "OAI-PMH 2.0",
+    "metadataFormat": "oai_dc"
+  }
+}

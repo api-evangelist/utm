@@ -1,0 +1,14 @@
+{
+  "repo": "utm",
+  "feeds": [
+    {
+      "source": "https://news.utm.my/",
+      "feed_url": "https://news.utm.my/feed/",
+      "title": "UTM News",
+      "saved": 0,
+      "method": "none"
+    }
+  ],
+  "post_count": 0,
+  "fetched": "2026-06-03T00:00:00Z"
+}
