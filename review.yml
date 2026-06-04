@@ -1,0 +1,43 @@
+---
+name: Universiti Teknologi Malaysia
+description: Universiti Teknologi Malaysia public developer/API footprint review for APIs.json cataloging.
+url: https://raw.githubusercontent.com/api-evangelist/utm/refs/heads/main/review.yml
+created: '2026-06-03'
+modified: '2026-06-03'
+reviews:
+  - date: '2026-06-03'
+    rating: 2
+    summary: >-
+      UTM has no public developer portal or documented REST APIs. The main web
+      portal, UTM Library, UTMDigital, and the myUTM SSO login were verified
+      live (HTTP 200). The strongest machine-consumable interface is the EPrints
+      UTM-IR OAI-PMH endpoint, which is documented by ROAR/OpenDOAR/Sherpa
+      registries but did not resolve from this environment, so its live status
+      is unverified (0). No official UTM GitHub organization was found. No
+      endpoints were fabricated; unverified items are flagged as such.
+    endpoints:
+      - url: https://www.utm.my/
+        status: 200
+        note: Official UTM web portal, verified live.
+      - url: https://library.utm.my/
+        status: 200
+        note: UTM Library, verified live.
+      - url: https://digital.utm.my/
+        status: 200
+        note: UTMDigital services (closest thing to a digital/IT hub), verified live.
+      - url: https://my.utm.my/login
+        status: 200
+        note: myUTM single sign-on / authentication portal, verified live.
+      - url: http://eprints.utm.my/cgi/oai2
+        status: 0
+        note: UTM-IR EPrints OAI-PMH endpoint per ROAR/OpenDOAR/Sherpa; did not resolve from this environment, unverified.
+      - url: https://v2.sherpa.ac.uk/id/repository/987
+        status: 200
+        note: Sherpa registry record confirming UTM-IR EPrints repository and OAI base.
+      - url: https://opendoar.ac.uk/repository/987
+        status: 200
+        note: OpenDOAR registry record for the UTM Institutional Repository.
+      - url: https://www.linkedin.com/school/universiti-teknologi-malaysia/
+        status: 200
+        note: Official UTM LinkedIn school page.
+---

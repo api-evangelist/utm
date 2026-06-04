@@ -1,0 +1,71 @@
+---
+aid: utm
+name: Universiti Teknologi Malaysia
+description: >-
+  Universiti Teknologi Malaysia (UTM) is a public research university in Johor
+  Bahru and Kuala Lumpur, Malaysia, ranked #181 in the QS World University
+  Rankings 2025. UTM operates a broad set of institutional web properties
+  including its main portal (utm.my), the UTM Library, UTMDigital services, the
+  myUTM single sign-on portal, and the UTM Institutional Repository (UTM-IR)
+  running EPrints. UTM does not publish a dedicated public developer portal or
+  documented REST APIs; the most machine-consumable public interface is the
+  EPrints OAI-PMH metadata feed for its institutional repository.
+type: Index
+position: Consumer
+access: 3rd-Party
+image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+url: https://raw.githubusercontent.com/api-evangelist/utm/refs/heads/main/apis.yml
+tags:
+  - Education
+  - Higher Education
+  - University
+  - Research
+  - Open Access
+  - Institutional Repository
+  - OAI-PMH
+  - Malaysia
+created: '2026-06-03'
+modified: '2026-06-03'
+specificationVersion: '0.19'
+apis:
+  - aid: utm:eprints-oai
+    name: UTM Institutional Repository (UTM-IR) OAI-PMH
+    description: >-
+      The Universiti Teknologi Malaysia Institutional Repository (UTM-IR) is
+      built on EPrints and exposes an OAI-PMH 2.0 metadata harvesting endpoint
+      at /cgi/oai2, as registered with ROAR, OpenDOAR, and Sherpa. It provides
+      Dublin Core metadata for theses, dissertations, journal articles,
+      conference papers, and other UTM research output. The endpoint is
+      documented by open-access registries but was not reachable for live
+      verification from this environment.
+    humanURL: http://eprints.utm.my/
+    baseURL: http://eprints.utm.my/cgi/oai2
+    tags: [ Institutional Repository, OAI-PMH, Open Access, EPrints, Research, Metadata ]
+    properties:
+      - type: Documentation
+        url: https://library.utm.my/utm-institutional-repository/
+      - type: Documentation
+        url: https://v2.sherpa.ac.uk/id/repository/987
+common:
+  - type: Website
+    url: https://www.utm.my/
+  - type: Library
+    url: https://library.utm.my/
+  - type: DeveloperPortal
+    url: https://digital.utm.my/
+  - type: Authentication
+    url: https://my.utm.my/login
+  - type: LinkedIn
+    url: https://www.linkedin.com/school/universiti-teknologi-malaysia/
+  - type: Plans
+    url: plans/utm-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/utm-rate-limits.yml
+  - type: FinOps
+    url: finops/utm-finops.yml
+  - type: Review
+    url: review.yml
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com
+---
