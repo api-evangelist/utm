@@ -11,6 +11,17 @@ description: >-
   documented REST APIs; the most machine-consumable public interface is the
   EPrints OAI-PMH metadata feed for its institutional repository.
 type: Index
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: false
+  label: Hosted service · you call their endpoint
+  confidence: medium
+  source:
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: free
   onboarding: unknown
