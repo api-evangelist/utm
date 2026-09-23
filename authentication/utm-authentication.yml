@@ -1,0 +1,114 @@
+generated: '2026-09-01'
+method: probed
+source: >-
+  https://login.microsoftonline.com/utm.my/v2.0/.well-known/openid-configuration (200, JSON),
+  https://login.microsoftonline.com/9c827912-3502-4333-ba47-1b242c3d20e6/federationmetadata/2007-06/federationmetadata.xml
+  (200, 28,441 bytes XML),
+  https://login.microsoftonline.com/getuserrealm.srf?login=user@utm.my&json=1 (200),
+  https://utmik.utm.my/server/api (200, anonymous read),
+  https://utmik.utm.my/server/api/core/communities (403),
+  https://journals.utm.my/index.php/index/oai?verb=Identify (200, anonymous),
+  https://journals.utm.my/jurnalteknologi/api/v1/issues (401, application/json),
+  https://my.utm.my/login (200) — all fetched 2026-09-01
+provider: Universiti Teknologi Malaysia
+providerId: utm
+description: >-
+  Authentication posture across every Universiti Teknologi Malaysia surface reachable from the
+  open internet. UTM has no public developer program, so there is no route by which an
+  unaffiliated caller obtains a credential for anything. The pattern that emerges is a clean
+  split: the harvesting protocols are fully anonymous and the REST interfaces beneath them are
+  closed, and the one fully specified authorization server is a campus identity service whose
+  clients are provisioned by hand.
+
+schemes:
+- name: UTM federated identity (OpenID Connect / OAuth 2.0, Microsoft Entra ID)
+  type: openIdConnect
+  x-operator: federation
+  issuer: https://login.microsoftonline.com/9c827912-3502-4333-ba47-1b242c3d20e6/v2.0
+  discovery: https://login.microsoftonline.com/utm.my/v2.0/.well-known/openid-configuration
+  jwks_uri: https://login.microsoftonline.com/9c827912-3502-4333-ba47-1b242c3d20e6/discovery/v2.0/keys
+  authorization_endpoint: https://login.microsoftonline.com/9c827912-3502-4333-ba47-1b242c3d20e6/oauth2/v2.0/authorize
+  token_endpoint: https://login.microsoftonline.com/9c827912-3502-4333-ba47-1b242c3d20e6/oauth2/v2.0/token
+  userinfo_endpoint: https://graph.microsoft.com/oidc/userinfo
+  end_session_endpoint: https://login.microsoftonline.com/9c827912-3502-4333-ba47-1b242c3d20e6/oauth2/v2.0/logout
+  device_authorization_endpoint: https://login.microsoftonline.com/9c827912-3502-4333-ba47-1b242c3d20e6/oauth2/v2.0/devicecode
+  scopes:
+  - openid
+  - profile
+  - email
+  - offline_access
+  response_types:
+  - code
+  - id_token
+  - code id_token
+  - id_token token
+  client_auth_methods:
+  - client_secret_post
+  - client_secret_basic
+  - private_key_jwt
+  - self_signed_tls_client_auth
+  id_token_signing_algs:
+  - RS256
+  subject_types:
+  - pairwise
+  dynamic_client_registration: false
+  public_client_registration: false
+  registration_note: >-
+    The discovery document publishes no registration_endpoint. A client_id exists only if UTM
+    Digital creates one inside the tenant, so this authorization server is readable by anyone
+    and callable by nobody outside the institution.
+  campus_entry_point: https://my.utm.my/login
+
+- name: UTMIK Repository — anonymous OAI-PMH harvesting
+  type: none
+  x-operator: institution
+  endpoint: https://utmik.utm.my/server/oai/request
+  status: 200
+  note: >-
+    OAI-PMH 2.0 verbs (Identify, ListMetadataFormats, ListSets) answered anonymously with no
+    credential, no key and no rate-limit header. This is the one interface on a UTM host that
+    an unaffiliated machine can actually call today.
+
+- name: UTMIK Repository — DSpace-CRIS REST API
+  type: apiKey
+  x-operator: institution
+  endpoint: https://utmik.utm.my/server/api
+  status: 200
+  note: >-
+    The HAL root is anonymously readable and advertises `authn`, `authorizations`, `logins`
+    and `oidc` link relations, but every collection endpoint beneath it — /core/communities,
+    /core/items, /core/sites, /discover/search/objects, /authn/status, /config/properties —
+    returned HTTP 403 with an Apache-generated body to this environment. DSpace-CRIS normally
+    exposes anonymous read on these, so the 403 is an edge policy rather than the application's
+    own authorization model. Recorded as closed because that is how it answers.
+
+- name: UTM Press journals — Open Journal Systems REST API v1
+  type: http
+  scheme: bearer
+  x-operator: institution
+  endpoint: https://journals.utm.my/{journal}/api/v1
+  status: 401
+  challenge_body: '{"error":"You are not authorized to access the requested resource.","errorMessage":""}'
+  note: >-
+    PKP OJS 3.x publishes a versioned REST API per journal. UTM Press runs it and it answers,
+    but it requires an API token issued from a journal manager account; UTM Press publishes no
+    route to request one. The same platform's OAI-PMH interface at
+    https://journals.utm.my/index/oai is fully anonymous.
+
+- name: MyUTM Portal
+  type: session
+  x-operator: institution
+  endpoint: https://my.utm.my/login
+  status: 200
+  note: >-
+    Laravel session login with a CSRF token, for staff and students. Human interface only; no
+    documented machine interface behind it.
+
+unreachable:
+- endpoint: http://eprints.utm.my/cgi/oai2
+  status: 0
+  note: >-
+    Connection refused on both port 80 and port 443 from this environment, HTTP 522 through an
+    independent proxy, and ECONNREFUSED from a third egress. DNS resolves to 161.139.21.110 on
+    UTM's own allocation, so the name is still published; the service is not answering the
+    public internet. No authentication posture can be recorded for it.

@@ -1,0 +1,105 @@
+generated: '2026-09-01'
+method: probed
+source: >-
+  Live probes on 2026-09-01 of the Microsoft Entra ID tenant that backs the utm.my
+  mail/identity namespace: the OpenID Connect discovery document at
+  https://login.microsoftonline.com/utm.my/v2.0/.well-known/openid-configuration (HTTP 200,
+  application/json), the signed SAML 2.0 / WS-Federation metadata at
+  https://login.microsoftonline.com/9c827912-3502-4333-ba47-1b242c3d20e6/federationmetadata/2007-06/federationmetadata.xml
+  (HTTP 200, 28,441 bytes, text/xml), and the realm-discovery response at
+  https://login.microsoftonline.com/getuserrealm.srf?login=user@utm.my&json=1 (HTTP 200),
+  which names the tenant "Universiti Teknologi Malaysia" and reports NameSpaceType "Managed".
+provider: Universiti Teknologi Malaysia
+providerId: utm
+description: >-
+  Identity federation is the surface class a university operates by definition, and for UTM it
+  is the only fully specified, anonymously readable machine contract in this profile. UTM does
+  not run a Shibboleth identity provider on its own hardware; it runs a Microsoft Entra ID
+  tenant, and the entityID, signing keys, SSO/SLO bindings and OIDC endpoints of that tenant
+  are published as signed SAML 2.0 metadata and as an OIDC discovery document that any client
+  can read without credentials.
+
+  The metadata is served from login.microsoftonline.com, which is Microsoft's host and shared
+  by every Entra customer, but the entity described is UTM's own directory and nobody else's:
+  the tenant GUID is UTM's, the verified domain is utm.my, and the federation brand name
+  returned by realm discovery is "Universiti Teknologi Malaysia". The university pipeline
+  classes this as `federation`, not `vendor` — the host is shared because federation metadata
+  is shared by definition, and the identity provider behind it is the institution's.
+
+  No entry for UTM was found in the eduGAIN metadata aggregate (7.8 MB parsed on 2026-09-01,
+  zero matches on "utm.my" or "teknologi malaysia"), so UTM's IdP is not visible to
+  interfederated services outside Malaysia through that route. SIFULAN, the Malaysian Access
+  Federation, returned HTTP 403 to every probe from this environment and could not be read, so
+  UTM's SIFULAN membership is neither confirmed nor denied here.
+
+entities:
+- name: Universiti Teknologi Malaysia — Microsoft Entra ID tenant
+  entityID: https://sts.windows.net/9c827912-3502-4333-ba47-1b242c3d20e6/
+  tenant_id: 9c827912-3502-4333-ba47-1b242c3d20e6
+  verified_domain: utm.my
+  federation_brand_name: Universiti Teknologi Malaysia
+  namespace_type: Managed
+  tenant_region_scope: AS
+  cloud_instance: microsoftonline.com
+  x-operator: federation
+  operator_evidence:
+    realm_discovery_url: https://login.microsoftonline.com/getuserrealm.srf?login=user@utm.my&json=1
+    realm_discovery_status: 200
+    realm_discovery_brand: Universiti Teknologi Malaysia
+    note: >-
+      The tenant is resolved from the utm.my domain itself, so the binding between the
+      institution and this entityID is established by domain ownership, not by hostname.
+  software: Microsoft Entra ID (Azure AD)
+  signed: true
+  saml:
+    metadata_url: https://login.microsoftonline.com/9c827912-3502-4333-ba47-1b242c3d20e6/federationmetadata/2007-06/federationmetadata.xml
+    metadata_status: 200
+    metadata_bytes: 28441
+    content_type: text/xml
+    roles:
+    - IDPSSODescriptor
+    - RoleDescriptor (fed:SecurityTokenServiceType)
+    - RoleDescriptor (fed:ApplicationServiceType)
+    protocols:
+    - urn:oasis:names:tc:SAML:2.0:protocol
+    - http://docs.oasis-open.org/wsfed/federation/200706
+    single_sign_on_service:
+    - binding: urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect
+      location: https://login.microsoftonline.com/9c827912-3502-4333-ba47-1b242c3d20e6/saml2
+    - binding: urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST
+      location: https://login.microsoftonline.com/9c827912-3502-4333-ba47-1b242c3d20e6/saml2
+    single_logout_service:
+    - binding: urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect
+      location: https://login.microsoftonline.com/9c827912-3502-4333-ba47-1b242c3d20e6/saml2
+  oidc:
+    discovery_url: https://login.microsoftonline.com/utm.my/v2.0/.well-known/openid-configuration
+    discovery_status: 200
+    issuer: https://login.microsoftonline.com/9c827912-3502-4333-ba47-1b242c3d20e6/v2.0
+    authorization_endpoint: https://login.microsoftonline.com/9c827912-3502-4333-ba47-1b242c3d20e6/oauth2/v2.0/authorize
+    token_endpoint: https://login.microsoftonline.com/9c827912-3502-4333-ba47-1b242c3d20e6/oauth2/v2.0/token
+    jwks_uri: https://login.microsoftonline.com/9c827912-3502-4333-ba47-1b242c3d20e6/discovery/v2.0/keys
+    end_session_endpoint: https://login.microsoftonline.com/9c827912-3502-4333-ba47-1b242c3d20e6/oauth2/v2.0/logout
+    device_authorization_endpoint: https://login.microsoftonline.com/9c827912-3502-4333-ba47-1b242c3d20e6/oauth2/v2.0/devicecode
+    scopes_supported: [ openid, profile, email, offline_access ]
+    response_types_supported: [ code, id_token, code id_token, id_token token ]
+    id_token_signing_alg_values_supported: [ RS256 ]
+    subject_types_supported: [ pairwise ]
+  campus_entry_point:
+    url: https://my.utm.my/login
+    status: 200
+    note: >-
+      MyUTM Portal, the campus-facing single sign-on entry point, runs on UTM's own host and
+      returned HTTP 200 on 2026-09-01. It is a login page, not a metadata endpoint; the
+      machine-readable contract is the tenant metadata above.
+
+not_found:
+- check: eduGAIN interfederation entry
+  method: parsed the full eduGAIN entity export at
+    https://technical.edugain.org/api.php?action=list_entities&format=json (HTTP 200, 7,811,988 bytes)
+  result: zero entities matching "utm.my" or "teknologi malaysia"
+- check: SIFULAN Malaysian Access Federation membership
+  method: https://www.sifulan.my/ and https://www.sifulan.my/members/
+  result: HTTP 403 to this environment; unreadable, so no claim is made either way
+- check: Shibboleth identity provider on a UTM host
+  method: DNS for idp.utm.my, sso.utm.my
+  result: idp.utm.my NXDOMAIN; no Shibboleth IdP found under utm.my

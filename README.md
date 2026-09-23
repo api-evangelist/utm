@@ -64,49 +64,106 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Universiti Teknologi Malaysia (UTM) is a public research university in Johor Bahru and Kuala Lumpur, Malaysia, ranked #181 in the QS World University Rankings 2025. This repository catalogs UTM's public developer and API footprint as an [APIs.json](https://apisjson.org) profile for the API Evangelist network.
+Universiti Teknologi Malaysia (UTM) is a public research university in Johor Bahru and Kuala Lumpur, Malaysia — one of the five institutions designated a Research University by the Ministry of Higher Education, and ranked #181 in the QS World University Rankings 2025. This repository catalogs UTM's public programmable footprint as an [APIs.json](https://apisjson.org) profile for the API Evangelist network.
 
 - APIs.json: https://raw.githubusercontent.com/api-evangelist/utm/refs/heads/main/apis.yml
 - Run with Naftiko: https://github.com/naftiko/fleet?utm_source=api-evangelist&utm_medium=readme&utm_campaign=utm-api-evangelist&utm_content=repo
 
 ## Type
 
+- **Class:** university (`x-type: university`)
+- **Category:** Public Research University
 - **Type:** Index
 - **Position:** Consumer
 - **Access:** 3rd-Party
 
 ## Tags
 
-Education, Higher Education, University, Research, Open Access, Institutional Repository, OAI-PMH, Malaysia
+University, Higher Education, Education, Public Research University, Technical University, Malaysia, Research, Open Access, Institutional Repository, Research Repository, Scholarly Publishing, OAI-PMH, Identity Federation, SAML, Crossref
+
+## Who operates what
+
+A university is a federation of buyers, not a producer, so every surface below carries an `x-operator` saying **who runs the thing it describes** — which is rarely the same answer as who the domain belongs to. Operator was settled by IP ownership as well as hostname: `whois` on **161.139.0.0/16** returns netname **UTM-MY**, "Universiti Teknologi Malaysia", country MY, and every UTM host named here sits inside it.
+
+| Surface | `x-operator` | Status |
+|---|---|---|
+| UTMIK Repository (DSpace-CRIS) — OAI-PMH + REST | `institution` | OAI-PMH 200, REST root 200, collections 403 |
+| UTM Press Journals (Open Journal Systems) — OAI-PMH | `institution` | OAI-PMH 200, REST API v1 401 |
+| UTM Microsoft Entra ID tenant — SAML 2.0 / OpenID Connect | `federation` | 200, signed metadata |
+| Crossref membership — Penerbit UTM Press, member 4787 | `registry` | 200 |
+| ROR registration — `ror.org/026w31v75` | `registry` | 200 |
+| UTM-IR EPrints (`eprints.utm.my`) | `institution` | unreachable — connection refused |
+
+No vendor contract is saved in this repository. The repository and journal software (DSpace-CRIS, PKP Open Journal Systems) belongs to those projects; what belongs to UTM is the deployment, the host, the content and the administrative contact, and that is what is recorded.
 
 ## APIs
 
-- **UTM Institutional Repository (UTM-IR) OAI-PMH** — EPrints-based OAI-PMH 2.0 metadata harvesting endpoint for UTM research output (theses, articles, conference papers). Base URL: `http://eprints.utm.my/cgi/oai2`. Docs: [UTM Library](https://library.utm.my/utm-institutional-repository/), [Sherpa registry](https://v2.sherpa.ac.uk/id/repository/987). Documented by open-access registries; not verified live from the cataloging environment.
+- **UTMIK Repository (DSpace-CRIS)** — UTM's institutional knowledge repository on `utmik.utm.my`. The OAI-PMH 2.0 endpoint answers anonymously as "UTMIK Repository" (adminEmail `library.automation@utm.my`, earliest record 2025-01-27) in twelve metadata formats — `oai_dc`, `qdc`, `mods`, `mets`, `didl`, `ore`, `rdf`, `marc`, `dim`, `etdms`, `rioxx`, `uketd_dc` — and advertises an OpenAIRE CERIF-for-CRIS 1.1 profile at `/server/oai/openairecris`. Sets include RESEARCH DATA, SCHOLARLY PUBLICATION, UTM ARCHIVE, UTM LENSES and CITIZEN SCIENCE. Base URL: `https://utmik.utm.my/server/oai/request`.
+- **UTM Press Journals (OJS)** — `journals.utm.my`, harvestable since 2011-12-12 as "UTM Press Journal Management powered by OJS". The per-journal REST API v1 is live but token-gated. Base URL: `https://journals.utm.my/index/oai`.
+- **UTM identity federation** — Microsoft Entra ID tenant `9c827912-3502-4333-ba47-1b242c3d20e6`, bound to UTM by domain ownership (realm discovery on `user@utm.my` returns FederationBrandName "Universiti Teknologi Malaysia"). Signed SAML 2.0 metadata under entityID `https://sts.windows.net/9c827912-3502-4333-ba47-1b242c3d20e6/` plus a full OIDC discovery document. This is the most completely specified machine contract UTM has.
+- **Crossref membership** — Penerbit UTM Press is member **4787**, prefix **10.11113**, 12,640 registered DOIs. *Jurnal Teknologi (Sciences & Engineering)* (ISSN 0127-9696 / 2180-3722) carries 6,311 DOIs with deposits in every year from 2011 through 2026.
+- **ROR registration** — `https://ror.org/026w31v75`, domain `utm.my`, established 1975, GRID `grid.410877.d`, ISNI `0000 0001 2296 1505`, plus four Crossref Open Funder Registry identifiers recording UTM as a research funder.
+- **UTM-IR EPrints** — retained as a documented relationship, not credited as a live surface. See below.
 
-UTM does not publish a dedicated public developer portal or documented REST APIs. The OAI-PMH repository feed is the only machine-consumable public interface confirmed via registries.
+## What UTM does not publish
 
-## Plans, Rate Limits & FinOps
+UTM publishes **no developer portal, no API documentation, and no OpenAPI, AsyncAPI or JSON Schema of its own**, and there is no route by which an unaffiliated developer can obtain a credential for anything it runs. Probed and confirmed absent:
 
-- [Plans / Pricing](plans/utm-plans-pricing.yml)
-- [Rate Limits](rate-limits/utm-rate-limits.yml)
-- [FinOps](finops/utm-finops.yml)
+- `www.utm.my` sitemap contains exactly one policy page and no API, developer or open-data page.
+- `api.utm.my` resolves and returns HTTP 200 — with a **17-byte empty IIS document** — and 404s on `/swagger`, `/swagger/v1/swagger.json`, `/openapi.json`, `/docs`, `/v1` and `/.well-known/openapi`. A soft-404, not a surface.
+- No official UTM GitHub organization. The two name-matching orgs hold zero and one unrelated repository.
+- No `llms.txt`, no `.well-known/security.txt`.
+- Moodle at `elearning.utm.my` is live but exposes no LTI 1.3 or web-service contract (`/mod/lti/auth.php`, `/.well-known/jwks.json`, `/webservice/rest/server.php` all 404).
+- No DataCite membership — `api.datacite.org` returns zero clients for UTM; DOIs are minted through Crossref.
+- No Shibboleth IdP under `utm.my`, and no UTM entry in the eduGAIN export (7.8 MB parsed, zero matches). SIFULAN, the Malaysian Access Federation, returned 403 to every probe, so its membership is neither confirmed nor denied.
+
+## Unreachable hosts
+
+- **`eprints.utm.my`** — the legacy EPrints institutional repository, still registered with ROAR (1358), OpenDOAR and Sherpa (987) and still linked from the UTM Library. DNS resolves to `161.139.21.110` on UTM's own allocation, but the host **refused connections on both port 80 and port 443** from this environment and returned HTTP 522 through two independent public proxies. UTMIK, whose earliest record is dated 2025-01-27, appears to be its successor.
+- **`utmik.utm.my`** answered fully at **17:26Z on 2026-09-01** — the OAI-PMH `responseDate` is the server's own proof — then stopped answering this environment and two public proxies later the same day. Its pointers may grade dead on a re-probe; the surface is real.
+- **`openscience.utm.my`** and **`hpc.utm.my`** resolve but do not connect. No open-science portal or HPC service catalog is claimed.
+
+## Domain standard conformance (Kin Score `education` regime)
+
+Reward-only, read from responses and never from a prose claim — UTM makes no conformance claims anywhere public. See [conformance/utm-conformance.yml](conformance/utm-conformance.yml).
+
+| Standard | Status | Operator |
+|---|---|---|
+| `oai-pmh` 2.0 | confirmed | institution (two independent endpoints) |
+| `crossref` | confirmed | institution (member 4787) |
+| `saml` 2.0 | confirmed | federation (Entra ID tenant) |
+| `orcid` | partial | institution (DSpace-CRIS ORCID endpoints advertised; records 403) |
+| `shibboleth` | not-found | deciding source unreadable, not negative |
+| `datacite`, `scim`, `lti`, `oneroster`, `ed-fi`, `caliper`, `qti` | not-found | — |
+
+## Artifacts
+
+- [Conformance](conformance/utm-conformance.yml) — `education` regime domain standards, probed
+- [Identity federation](identity-federation/utm-identity-federation.yml) — Entra ID tenant, SAML + OIDC
+- [Authentication](authentication/utm-authentication.yml) — auth posture across every reachable surface
+- [Plans / Pricing](plans/utm-plans-pricing.yml) · [Rate Limits](rate-limits/utm-rate-limits.yml) · [FinOps](finops/utm-finops.yml) · [Domain Security](security/utm-domain-security.yml)
+- [review.yml](review.yml) — per-URL verification, June 2026 and September 2026 passes
 
 ## Timestamps
 
 - **Created:** 2026-06-03
-- **Modified:** 2026-06-03
+- **Modified:** 2026-09-01
 
 ## Common Properties
 
 - Website: https://www.utm.my/
 - Library: https://library.utm.my/
-- Developer/Digital Portal: https://digital.utm.my/
-- Authentication (myUTM SSO): https://my.utm.my/login
+- Research Repository: https://utmik.utm.my/
+- Identity Federation: https://login.microsoftonline.com/utm.my/v2.0/.well-known/openid-configuration
+- Single Sign-On (MyUTM): https://my.utm.my/login
+- AI Policy: [Guidelines for the Use of Generative AI in Teaching and Learning, UTM](https://fke.utm.my/wp-content/uploads/2024/11/Guidelines-for-the-Use-of-Generative-Artificial-Intelligence-in-Teaching-and-Learning-UTM-1.pdf)
+- Blog: https://news.utm.my/
+- Privacy Policy: https://www.utm.my/privacy-policy/
 - LinkedIn: https://www.linkedin.com/school/universiti-teknologi-malaysia/
 
-## Notes
+## Changes in the 2026-09-01 re-profile
 
-All listed properties were probed during cataloging. The main portal, library, UTMDigital, and myUTM login returned HTTP 200. The UTM-IR OAI-PMH endpoint (`http://eprints.utm.my/cgi/oai2`) is documented by ROAR, OpenDOAR, and Sherpa but did not resolve from the cataloging environment, so its live status is recorded as unverified (0). No official UTM GitHub organization was found, and no endpoints were fabricated. See [review.yml](review.yml) for per-URL verification details.
+Three institution-operated surfaces the June 2026 pass missed were found and verified: the UTMIK Repository, the UTM Press journal platform, and UTM's identity federation. Two registry memberships were recorded. **One pointer was removed** — the `DeveloperPortal` claim on `https://digital.utm.my/`. That host is live and is a genuine UTM property, but it is the Office of Quality & Digital Transformation (UTMDX), an administrative office site: no API documentation, no keys, no registration. Claiming a developer program UTM does not run is the presence-is-not-provenance error the university pipeline exists to prevent, and removing it lowers this profile's score, which is the correct outcome.
 
 ## Maintainers
 

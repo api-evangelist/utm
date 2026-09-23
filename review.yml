@@ -3,7 +3,7 @@ name: Universiti Teknologi Malaysia
 description: Universiti Teknologi Malaysia public developer/API footprint review for APIs.json cataloging.
 url: https://raw.githubusercontent.com/api-evangelist/utm/refs/heads/main/review.yml
 created: '2026-06-03'
-modified: '2026-06-03'
+modified: '2026-09-01'
 reviews:
   - date: '2026-06-03'
     rating: 2
@@ -40,4 +40,71 @@ reviews:
       - url: https://www.linkedin.com/school/universiti-teknologi-malaysia/
         status: 200
         note: Official UTM LinkedIn school page.
----
+  - date: '2026-09-01'
+    rating: 3
+    summary: >-
+      University-pipeline re-profile with operator attribution settled before anything was
+      saved. Three institution-operated surfaces were found that the June 2026 pass missed,
+      all verified live: the UTMIK Repository (DSpace-CRIS) OAI-PMH 2.0 endpoint, the UTM
+      Press Open Journal Systems OAI-PMH interface, and UTM's Microsoft Entra ID tenant, whose
+      signed SAML 2.0 metadata and OpenID Connect discovery document are the most completely
+      specified machine contract UTM has. Two registry memberships were recorded: ROR
+      026w31v75, and Crossref member 4787 (Penerbit UTM Press, prefix 10.11113, 12,640 DOIs).
+      Operator was settled by IP ownership as well as hostname — whois on 161.139.0.0/16
+      returns netname UTM-MY — so the repository and journal deployments are UTM's even though
+      the software is DSpace-CRIS and PKP OJS; neither product's generic contract was saved
+      into this repository. The June profile's DeveloperPortal pointer to digital.utm.my was
+      removed: that host is the Office of Quality & Digital Transformation, an administrative
+      office, not a developer portal. UTM still publishes no API documentation and no
+      specification of its own, and there is no way for an outside developer to obtain a
+      credential for anything it runs.
+    endpoints:
+      - url: https://utmik.utm.my/server/oai/request?verb=Identify
+        status: 200
+        note: >-
+          OAI-PMH 2.0 Identify, repositoryName "UTMIK Repository", adminEmail
+          library.automation@utm.my, earliestDatestamp 2025-01-27, twelve metadata formats
+          including rioxx and etdms, plus an OpenAIRE CERIF-for-CRIS 1.1 profile. Server
+          responseDate 2026-09-01T17:26:11Z. Host stopped answering later the same day, from
+          this environment and from two independent proxies.
+      - url: https://utmik.utm.my/server/api
+        status: 200
+        note: DSpace-CRIS HAL root, anonymously readable; collections beneath it answered 403.
+      - url: https://journals.utm.my/index.php/index/oai?verb=Identify
+        status: 200
+        note: >-
+          "UTM Press Journal Management powered by OJS", adminEmail journal_utm@utm.my,
+          earliestDatestamp 2011-12-12.
+      - url: https://journals.utm.my/jurnalteknologi/api/v1/issues
+        status: 401
+        note: OJS REST API v1 is live but token-gated with no public route to request one.
+      - url: https://login.microsoftonline.com/utm.my/v2.0/.well-known/openid-configuration
+        status: 200
+        note: >-
+          UTM Entra ID tenant 9c827912-3502-4333-ba47-1b242c3d20e6; no registration_endpoint,
+          so readable by anyone and callable only by clients UTM provisions.
+      - url: https://login.microsoftonline.com/9c827912-3502-4333-ba47-1b242c3d20e6/federationmetadata/2007-06/federationmetadata.xml
+        status: 200
+        note: >-
+          Signed SAML 2.0 metadata, entityID https://sts.windows.net/9c827912-3502-4333-ba47-1b242c3d20e6/,
+          IDPSSODescriptor with HTTP-Redirect and HTTP-POST SSO bindings.
+      - url: https://api.crossref.org/members/4787
+        status: 200
+        note: Penerbit UTM Press, prefix 10.11113, 12,640 DOIs.
+      - url: https://api.ror.org/organizations/026w31v75
+        status: 200
+        note: ROR record for UTM, domain utm.my, established 1975.
+      - url: https://api.utm.my/
+        status: 200
+        note: 17-byte empty IIS document and 404 on every documented path; soft-404, not a surface.
+      - url: http://eprints.utm.my/cgi/oai2?verb=Identify
+        status: 0
+        note: >-
+          Connection refused on ports 80 and 443 from this environment, HTTP 522 through two
+          independent proxies. Still registered with ROAR/OpenDOAR/Sherpa and still linked from
+          the UTM Library, so the relationship is retained but not credited as live.
+      - url: https://digital.utm.my/
+        status: 200
+        note: >-
+          Live, but it is the Office of Quality & Digital Transformation (UTMDX), not a
+          developer portal. The DeveloperPortal pointer was removed.
